@@ -31,19 +31,44 @@ async function createCourse() {
 }
 
 async function getCourses() {
+
+    // pagination
+    const pageNumber = 2;
+    const pageSize = 10;
+    // /api/courses?pageNumber=2&pageSize=10
+
     const courses = await Course
         //.find({ author: 'Mosh', isPublished: true }) // find by author, isPublished equals to ..
         //.find({ price: { $gte: 10, $lt: 20 } }) // filter by range: 10 <= price < 20
         //.find({ price: { $in: [10, 15, 20] } }) // filter by in
+        //.find({ author: /^Mosh/ }) // regex start with Mosh
+        //.find({ author: /Hamedani$/ }) // regex end with Hamedani
+        //.find({ author: /.*Mosh.*/i }) // regex contains Mosh.. /i case insensitive
         .find()
-        .or([ { author: 'Mosh' }, { isPublished: true } ])
+        //.or([ { author: 'Mosh' }, { isPublished: true } ])
         //.and([ { author: 'Mosh' }, { isPublished: true } ])
-        .limit(10)
+        
+        // pagination. skip previous pages and limit to pageSize
+        //.skip((pageNumber - 1) * pageSize)
+        //.limit(pageSize)
+        
         .sort({name: 1}) // ascending, -1 descending
-        .select({ name: 1, tags: 1})
+        
+        .select({ name: 1, tags: 1}) // select only the properties passed as arguments
+        //.count() // returns the number of documents
+
     console.log(courses);
 }
 
 //createCourse();
-getCourses();
+//getCourses();
+
+async function getCourse(id) {
+    const course = await Course.findById(id);
+    console.log('course',course);
+    return course;
+}
+
+getCourse('5e8ca187e6ec366df136da0d');
+
 

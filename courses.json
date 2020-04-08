@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5e8ca187e6ec366df136da0d"},"tags":["node","backend"],"name":"Node.js Course","author":"Mosh","isPublished":true,"date":{"$date":{"$numberLong":"1586274695576"}},"__v":{"$numberInt":"0"}}
+{"_id":{"$oid":"5e8ca19b503f106df2ecf8f9"},"tags":["node","frontend"],"name":"Angular Course","author":"Mosh","isPublished":true,"date":{"$date":{"$numberLong":"1586274715973"}},"__v":{"$numberInt":"0"}}
