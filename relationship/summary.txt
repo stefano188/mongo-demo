@@ -1,0 +1,40 @@
+
+# Referencing documents
+
+const Author = mongoose.model('Author', new mongoose.Schema({
+    ...
+}
+# author property to enable to save a ref id property (ObjectId).
+const Course = mongoose.model('Course', new mongoose.Schema({
+  name: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Author'
+  }
+}));
+
+# query documents and its referring documents.
+# populate(...) method make the referenced document to load (like a lazy approach)
+#   first param: the name of the property referenced. 
+#   second param: the list of properties to select. -_id to exclude the _id property that is selected by default
+async function listCourses() { 
+  const courses = await Course
+    .find()
+    .populate('author', 'name -_id')
+    // .populate('category', 'name -_id')
+    .select('name author');
+  console.log(courses);
+}
+
+# Embedding documents
+
+# author property type is the schema type defined for Author document
+# required (and other) property can be set with schema type option
+const Course = mongoose.model('Course', new mongoose.Schema({
+  name: String,
+  author: {
+    type: authorSchema,
+    required: true
+  },
+  follower: followerSchema
+}));
