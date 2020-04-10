@@ -1,22 +1,77 @@
 
 const mongoose = require('mongoose')/*.set('debug', true)*/;
-mongoose.connect('mongodb://localhost/mongo-exercises', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(
+        'mongodb://localhost/mongo-exercises', 
+        { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('connected to mongo-exercises'))
     .catch((err) => console.error('error connecting to mongo-exercise', err));
 
-var ObjectId = require('mongoose').Types.ObjectId;
-
 const schema = new mongoose.Schema({
     //_id: mongoose.ObjectId,
-    tags: [ String ],
+    author: {
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 30
+    },
+    name: { 
+        type: String, 
+        required: true,  // validation.. required field
+        minlength: 3,
+        maxlength: 100,
+        match: /^\w+\w$/ // match any word character without spaces,
+    }, 
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'network', 'mobile']
+    },
+    tags: {
+        type: Array,
+        validate: {
+            validator: function(value) {
+                return (value && value.length > 0);
+            },
+            message: 'A course should have at least one tag',
+        }
+    },
     date: { type: Date, default: Date.now },
-    name: String,
-    author: String,
-    isPublished: Boolean,
-    price: Number
+    isPublished: {
+        type: Boolean,
+        default: false
+    },
+    price: {
+        type: Number,
+        default: 0,
+        validate: {
+            //isAsync: true, // deprecated.. should return a promise
+
+            validator: (value) => new Promise((resolve, reject) => {
+                console.log('validating price... value', value);
+                if (value > 0) resolve(true);
+                else reject('price error');
+            }),
+            message: 'Price should be grater than 0'
+        },
+        get: v => Math.round(v),
+        set: v => Math.round(v)
+    }
 });
 
 const Course = mongoose.model('Course', schema);
+
+async function createCourse(course) {   
+    try {
+        await course.validate();
+        const c = await course.save(course);
+        return c;
+    } catch (err) {
+        //console.error('...',err.message);
+        for (field in err.errors) {
+            console.log(err.errors[field].message);
+        }
+    }
+}
 
 async function getAllCourses() {
     return await Course
@@ -107,4 +162,21 @@ async function run() {
     //findAndRemoveCourse('5a68fdf95db93f6477053ddd');
 }
 
-run();
+//run();
+
+var course1 = new Course({
+    author: 'aeiou'
+});
+
+var course2 = new Course({
+    name: '21_3aAa',
+    author: 'aeiou',
+    category: 'web',
+    tags: ['node'],
+    price: 2.6
+});
+
+//createCourse(course1);
+createCourse(course2)
+    .then((result) => console.log('createCourse', result))
+    .catch((error) => console.error(error));
