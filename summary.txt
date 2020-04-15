@@ -4,3 +4,14 @@
 
 # Mongoose Data Validation Samples 
 
+
+# Vidly exercise
+
+# Transaction
+# Create Atomic Task to save, update, ....
+npm i fawn
+
+# ObjectID
+# Check a valid ObjectID
+npm i joi-objectid
+
