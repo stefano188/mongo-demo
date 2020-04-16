@@ -125,5 +125,20 @@ router.delete('/:id', [auth, admin], async (req, res) => {
 
 
 **************************
+ExpressJS Async Errors
+npm i express-async-errors
+# this module implements the same function in middleware/async module.
+# it wraps the second parameter of the route handler to an async middleware function calling next() if any errors occur.
+
+# vidly/index.js
+require('express-async-errors');
+# so, any route handler use the middleware function in express-async-errors module
+
+**************************
+Logger module
+npm i winston
+
+
+**************************
 # Config module
 npm i config

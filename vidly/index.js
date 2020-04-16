@@ -1,4 +1,5 @@
 
+require('express-async-errors');
 const genres = require('./routes/genres');
 const customers = require('./routes/customers');
 const movies = require('./routes/movies');
@@ -6,12 +7,16 @@ const rentals = require('./routes/rentals');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 const error = require('./middleware/error');
+const winston = require('winston');
 const express = require('express');
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const config = require('config');
 const app = express();
+
+const fileTransport = new winston.transports.File({ filename: 'logfile.log' });
+winston.add(fileTransport);
 
 console.log(`****NODE_ENV: ${process.env.NODE_ENV}`);
 
