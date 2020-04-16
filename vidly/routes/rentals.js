@@ -1,4 +1,5 @@
 
+const auth = require('../middleware/auth');
 const mongoose = require('mongoose');
 const express = require('express');
 const Fawn = require('fawn');
@@ -20,12 +21,8 @@ router.get('/:id', async (req, res) => {
     res.send(rental);
 });
 
-router.post('/', async (req, res) => {
-    console.log('rentals post', req.body);
-    console.log('rentals post customerId', req.body.customerId);
-    console.log('rentals post movieId', req.body.movieId);
+router.post('/', auth, async (req, res) => {
     const { error } = validate(req.body);
-    console.log('Joi validation error', error);
     if (error) return res.status(400).send(error.details[0].message);
 
     const customer = await Customer.findById(req.body.customerId);
@@ -82,8 +79,6 @@ router.post('/', async (req, res) => {
 
     // movie.numberInStock--;
     // await movie.save();
-
-    
 })
 
 module.exports = router;

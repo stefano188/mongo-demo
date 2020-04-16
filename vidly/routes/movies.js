@@ -1,4 +1,5 @@
 
+const auth = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
 const { Movie, validate } = require('../models/movie');
@@ -10,13 +11,12 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    // TODO: check GET /:789
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).send('The movie with given ID is not found');
     res.send(movie);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     console.log('movie post', req.body);
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const genreObj = new Genre({
             name: req.body.genre.name
@@ -62,7 +62,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     const movie = await Movie.findByIdAndDelete(req.params.id , (err) => {
         if (err) {
             logErrors(err);

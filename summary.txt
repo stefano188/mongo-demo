@@ -7,11 +7,72 @@
 
 # Vidly exercise
 
+**************************
 # Transaction
 # Create Atomic Task to save, update, ....
 npm i fawn
 
+# see vidly/routes/rentals.js, router.post method.
+# save a new rental object and update movie stock in atomic transaction
+
+
+**************************
 # ObjectID
 # Check a valid ObjectID
 npm i joi-objectid
 
+# Check that objectId passed as argument is a valid ObjectID
+# requires Joi
+const Joi = require('@hapi/joi');
+# requires 'joi-objectid' passing Joi object reference, and get a function 'Joi.objectId'
+Joi.objectId = require('joi-objectid')(Joi);
+
+# Joi.objectId has some method (e.g. required())
+function validateRental(rental) {
+    const schema = Joi.object({
+        customerId: Joi.objectId().required(),
+        ...
+    ....
+
+**************************
+# Lodash ( _ 'underscore' library )
+npm i lodash
+
+// lodash approach
+# _.pick(req.body, ['name','email','password'])
+#   param1: the object that contains the properties
+#   param2: the properties to pick up (array of key properties) from the object
+user = new User(_.pick(req.body, ['name','email','password']));
+
+# _.pick(user, ['_id', 'name', 'email']
+res.send(_.pick(user, ['_id', 'name', 'email']));
+
+**************************
+# Password complexity
+joi-password-complexity
+
+**************************
+# Password hashing
+npm i bcrypt
+
+# fist generate a Sault (default 10)
+# then call 'hash' method to has the password with the generated Salt.
+const salt = await bcrypt.genSalt(10);
+user.password = await bcrypt.hash(user.password, salt);
+
+# param1: password provided by the user (in request.body)
+# param2: hashed password stored in DB
+# bcrypt extract the Salt from the user.password stored in DB and use it to hash the password provided by the user and check if they match
+const isValid = await bcrypt.compare(req.body.password, user.password);
+
+**************************
+# JWT (JSON Web Token)
+npm i jsonwebtoken
+
+# param1: payload (e.g. user._id)
+# param2: secret key, stored in environment variable defined in custom-environment-variables.json
+const token = jwt.sign({ id: user._id }, config.get('jwtPrivateKey'));
+
+**************************
+# Config module
+npm i config
