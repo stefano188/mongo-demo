@@ -69,9 +69,60 @@ const isValid = await bcrypt.compare(req.body.password, user.password);
 # JWT (JSON Web Token)
 npm i jsonwebtoken
 
+# generate the token providing 1. the payload and 2. the secret key
 # param1: payload (e.g. user._id)
 # param2: secret key, stored in environment variable defined in custom-environment-variables.json
 const token = jwt.sign({ id: user._id }, config.get('jwtPrivateKey'));
+
+# encapsulate token generation in mongoose schema object
+# models/user.js  .. user object has to generate the token
+# rembember to implement the function BEFORE creating User object (mongoose.model('User', userSchema))
+userSchema.methods.generateAuthToken = function() {
+    ...
+
+# get the token calling 
+const token = user.generateAuthToken();
+# return the token to client in an header key
+# header key should be prefix with 'x-'
+res.header('x-auth-token', token).send(...)
+
+# Use the Json Web Token to protect the routes.
+# middleware function in auth.js
+    function auth(req, res, next) {
+    ....
+    # get the token that should be present in the request header
+    const token = req.header('x-auth-token');
+    # if not present respond with 401 Unauthorized
+    if (!token) return res.status(401).send('Access denied. No token provided');
+
+    # if present, verify the token calling verify
+    # param1: token
+    # param2: the secret key (stored in environment variable)
+    # return the decoded token (the payload)
+    const decodedToken = jwt.verify(token, config.get('jwtPrivateKey'));
+    # store the decoded token in req.user object
+    req.user = decodedToken;
+
+    # go to the next middleware function
+    next();
+
+# middleware function in admin.js
+    function(req, res, next) { 
+    ...
+    # check if req.user object has 'isAdmin' property set and if the value is true
+    # if 'isAdmin' not present or the value is false respond with 403 Forbidden.
+    if (!req.user.isAdmin) return res.status(403).send('Forbidden');
+
+# use the middleware functions to protect the routes
+
+# enable the post request if authentication is passed providing a valid token,
+# param2: the middleware function (auth) imported with require statement
+router.post('/', auth, async (req, res) => {
+
+# after checking for auth, it checks also if the user has 'isAdmin' true
+# param2: an arrya of middleware functions executed in the same order.
+router.delete('/:id', [auth, admin], async (req, res) => {
+
 
 **************************
 # Config module
