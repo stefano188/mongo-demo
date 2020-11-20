@@ -35,7 +35,7 @@ function validateRental(rental) {
     ....
 
 **************************
-# Lodash ( _ 'underscore' library )
+# Lodash ( like _ 'underscore' library but more powerful )
 npm i lodash
 
 // lodash approach
@@ -56,7 +56,7 @@ joi-password-complexity
 npm i bcrypt
 
 # fist generate a Sault (default 10)
-# then call 'hash' method to has the password with the generated Salt.
+# then call 'hash' method to get the password with the generated Salt.
 const salt = await bcrypt.genSalt(10);
 user.password = await bcrypt.hash(user.password, salt);
 

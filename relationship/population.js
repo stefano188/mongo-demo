@@ -50,6 +50,6 @@ async function listCourses() {
 
 // createAuthor('Mosh', 'My bio', 'My Website');
 
-// createCourse('Node Course', '5e90787d378338ba75c0c7c0')
+// createCourse('Node Course', '5fb689dc44ddb87c1b4754a0')
 
 listCourses();

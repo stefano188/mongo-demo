@@ -14,6 +14,8 @@ router.post('/', async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send('Invalid user login');
 
+    // remember: the sault is included in user.password 
+    // compare method extracts that sault and use it to hash req.body.password and compare with user.password 
     const isValid = await bcrypt.compare(req.body.password, user.password);
     if (!isValid) return res.status(400).send('Invalid user login');
 

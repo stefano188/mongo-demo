@@ -1,5 +1,5 @@
 
-# Referencing documents
+# Referencing documents (population.js)
 
 const Author = mongoose.model('Author', new mongoose.Schema({
     ...
@@ -26,7 +26,7 @@ async function listCourses() {
   console.log(courses);
 }
 
-# Embedding documents
+# Embedding documents (embedding.js)
 
 # author property type is the schema type defined for Author document
 # required (and other) property can be set with schema type option
