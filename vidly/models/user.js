@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function() {
-    // param1: payload object
+    // param1: payload object that compose the JWT Token
     // param2: secret key stored in environment variable
     const token = jwt.sign({ id: this._id, isAdmin: this.isAdmin }, config.get('jwtPrivateKey'));
     return token;

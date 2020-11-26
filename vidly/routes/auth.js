@@ -19,7 +19,6 @@ router.post('/', async (req, res) => {
     const isValid = await bcrypt.compare(req.body.password, user.password);
     if (!isValid) return res.status(400).send('Invalid user login');
 
-    //const token = jwt.sign({ id: user._id }, config.get('jwtPrivateKey'));
     const token = user.generateAuthToken();
     
     user.testMethod(); // works
