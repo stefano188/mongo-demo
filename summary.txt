@@ -142,3 +142,12 @@ npm i winston
 **************************
 # Config module
 npm i config
+
+
+**************************
+Unit Tests
+npm i jest --save-dev
+
+**************************
+Integration Tests
+npm i supertest --save-dev

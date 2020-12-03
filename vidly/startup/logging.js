@@ -13,5 +13,7 @@ module.exports = function () {
     });
 
     const fileTransport = new winston.transports.File({ filename: 'logfile.log' });
+    const consoleTransport = new winston.transports.Console();
     winston.add(fileTransport);
+    winston.add(consoleTransport);
 }
